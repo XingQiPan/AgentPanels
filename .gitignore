@@ -1,5 +1,9 @@
-# Local dispatcher/runtime repository
-one-code-cli/
+# Local dispatcher/runtime generated files
+one-code-cli/target/
+one-code-cli/dist/
+one-code-cli/node_modules/
+one-code-cli/tmp-occ-use/
+.local-git-backups/
 
 # Editor and OS files
 .DS_Store
@@ -11,4 +15,3 @@ Thumbs.db
 *.log
 tmp/
 temp/
-

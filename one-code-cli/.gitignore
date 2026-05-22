@@ -1,0 +1,14 @@
+/target/
+/dist/
+/node_modules/
+/.occ/
+/.occ-*/
+/npm/bin/occ-native
+/npm/bin/occ-native.exe
+*.tgz
+.DS_Store
+docs/superpowers/
+
+.nmas/
+
+.agents/
