@@ -1,9 +1,11 @@
+import path from "node:path";
 import { getDefaultRepoRoot } from "./services/path-utils.js";
 
 export type AppConfig = {
   host: string;
   port: number;
   repoRoot: string;
+  dataDir: string;
   occPath?: string;
   occTimeoutMs: number;
   corsOrigins: string[];
@@ -14,10 +16,13 @@ const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_OCC_TIMEOUT_MS = 5000;
 
 export function getConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
+  const repoRoot = env.AGENTPANELS_REPO_ROOT ?? getDefaultRepoRoot();
+
   return {
     host: env.HOST ?? DEFAULT_HOST,
     port: parsePort(env.PORT, DEFAULT_PORT),
-    repoRoot: env.AGENTPANELS_REPO_ROOT ?? getDefaultRepoRoot(),
+    repoRoot,
+    dataDir: env.AGENTPANELS_DATA_DIR ?? path.join(repoRoot, "dashboard", "backend", "data"),
     occPath: env.OCC_PATH,
     occTimeoutMs: parsePort(env.OCC_TIMEOUT_MS, DEFAULT_OCC_TIMEOUT_MS),
     corsOrigins: parseCorsOrigins(env.CORS_ORIGINS),

@@ -2,7 +2,10 @@ import { fileURLToPath } from "node:url";
 import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 import { getConfig, type AppConfig } from "./config.js";
+import { registerAgentRoutes } from "./routes/agents.js";
 import { registerHealthRoute } from "./routes/health.js";
+import { registerSkillRoutes } from "./routes/skills.js";
+import { registerWorkspaceRoutes } from "./routes/workspaces.js";
 import { probeOcc, type OccProbeResult } from "./services/occ-runner.js";
 
 export type BuildServerOptions = {
@@ -31,6 +34,21 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
           timeoutMs: config.occTimeoutMs,
         })),
   });
+
+  await registerWorkspaceRoutes(app, {
+    repoRoot: config.repoRoot,
+    dataDir: config.dataDir,
+  });
+
+  const occListOptions = {
+    repoRoot: config.repoRoot,
+    occPath: config.occPath,
+    timeoutMs: config.occTimeoutMs,
+    env: { ...process.env, OCC_PATH: config.occPath ?? process.env.OCC_PATH },
+  };
+
+  await registerAgentRoutes(app, occListOptions);
+  await registerSkillRoutes(app, occListOptions);
 
   return app;
 }
