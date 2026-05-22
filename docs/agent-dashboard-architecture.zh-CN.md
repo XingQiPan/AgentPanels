@@ -717,9 +717,9 @@ stateDiagram-v2
   running --> success: occ success=true
   running --> failed: occ success=false / 进程错误
   running --> cancelled: 用户取消
-  success --> reviewing: 需要人工审核
-  reviewing --> success: 审核通过
-  reviewing --> failed: 审核拒绝
+  success --> reviewing: 需要人工确认
+  reviewing --> success: 确认通过
+  reviewing --> failed: 确认拒绝
 ```
 
 状态来源：
@@ -926,5 +926,5 @@ Tauri shell
 - 工作区扫描和目录树缓存。
 - Agent / Skill 绑定。
 - 主 Agent 规划。
-- 审核流。
+- 结果确认流。
 - 插件预留接口落地。

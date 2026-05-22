@@ -1,0 +1,20 @@
+{
+  "name": "agentpanels-dashboard",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "npm --workspace @agentpanels/frontend run dev",
+    "dev:frontend": "npm --workspace @agentpanels/frontend run dev",
+    "dev:backend": "npm --workspace @agentpanels/backend run dev",
+    "build": "npm --workspaces run build",
+    "typecheck": "npm --workspaces run typecheck",
+    "test": "npm --workspaces --if-present run test"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

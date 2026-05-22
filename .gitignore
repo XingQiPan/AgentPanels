@@ -5,6 +5,10 @@ one-code-cli/node_modules/
 one-code-cli/tmp-occ-use/
 .local-git-backups/
 .worktrees/
+dashboard/node_modules/
+dashboard/**/node_modules/
+dashboard/**/dist/
+dashboard/.dev-logs/
 
 # Editor and OS files
 .DS_Store

@@ -121,7 +121,7 @@ prototypes/agent-dashboard-cn-prototype.png
 - `分派` 按钮。
 - 左侧导航：`总览`、`工作区`、`Agents`、`Skills`、`会话`、`运行记录`、`Agent 开发`、`设置`。
 - 工作区列表。
-- 运行流水线：`待分派`、`执行中`、`待审核`、`已完成`。
+- 运行流水线：`待分派`、`执行中`、`待确认`、`已完成`。
 - 主 Agent 调度面板。
 - 实时事件流。
 
@@ -878,7 +878,7 @@ type DashboardArtifact = {
 验收：
 
 - 默认首页仍聚焦当前工作区。
-- 全局视图能看到多个工作区的运行中、失败、待审核数量。
+- 全局视图能看到多个工作区的运行中、失败、待确认数量。
 - 信息密度不能回到过乱版本。
 
 ### 阶段 5：增强 `one-code-cli`
@@ -908,7 +908,7 @@ type DashboardArtifact = {
 | --- | --- | --- |
 | `queued` | 后端创建任务但还未 spawn `occ` | 等待调度 |
 | `running` | 后端已 spawn `occ` | 执行中 |
-| `reviewing` | `occ` 成功但看板要求人工确认 | 待审核 |
+| `reviewing` | `occ` 成功但看板要求人工确认 | 待确认 |
 | `success` | `occ` 返回 `success=true` | 完成 |
 | `failed` | `occ` 返回 `success=false` 或进程错误 | 失败 |
 | `cancelled` | 预留取消接口 | 已取消 |
