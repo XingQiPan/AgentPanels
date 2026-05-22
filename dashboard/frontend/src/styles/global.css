@@ -36,6 +36,12 @@ button {
   cursor: pointer;
 }
 
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 218px minmax(0, 1fr);
@@ -364,6 +370,18 @@ kbd {
   padding-bottom: 8px;
 }
 
+.placeholder-page {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+}
+
+.muted-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 h1,
 h2,
 h3,
@@ -507,6 +525,18 @@ code {
   border: 0;
   color: #40506a;
   background: transparent;
+}
+
+.empty-column {
+  display: grid;
+  place-items: center;
+  min-height: 96px;
+  margin-top: 12px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
 }
 
 .right-rail {

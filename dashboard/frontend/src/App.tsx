@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { getHealth, type HealthStatus, toHealthStatus } from "./api/client";
 import { AppShell, type PageKey } from "./components/layout/AppShell";
-import { AgentBuilderPage } from "./pages/AgentBuilderPage";
-import { AgentsSkillsPage } from "./pages/AgentsSkillsPage";
 import { HomePage } from "./pages/HomePage";
-import { SessionDetailPage } from "./pages/SessionDetailPage";
+import { RunsPage } from "./pages/RunsPage";
+import { SessionsPage } from "./pages/SessionsPage";
+import { WorkspacesPage } from "./pages/WorkspacesPage";
 
 const initialHealth: HealthStatus = { state: "loading", label: "正在检查后端", health: null };
 
@@ -29,16 +29,12 @@ export default function App() {
 
   const page = useMemo(() => {
     switch (activePage) {
-      case "agents":
-      case "skills":
       case "workspace":
-      case "runs":
-        return <AgentsSkillsPage healthStatus={healthStatus} />;
+        return <WorkspacesPage />;
       case "sessions":
-        return <SessionDetailPage healthStatus={healthStatus} />;
-      case "builder":
-        return <AgentBuilderPage healthStatus={healthStatus} />;
-      case "settings":
+        return <SessionsPage />;
+      case "runs":
+        return <RunsPage />;
       case "overview":
       default:
         return <HomePage healthStatus={healthStatus} />;

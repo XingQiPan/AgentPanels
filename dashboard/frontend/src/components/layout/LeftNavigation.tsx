@@ -1,27 +1,8 @@
-import {
-  Bot,
-  Boxes,
-  Braces,
-  ClipboardList,
-  Code2,
-  Home,
-  MessageSquare,
-  Settings,
-  Sparkles,
-} from "lucide-react";
-import type { HealthStatus } from "../../api/client";
+import { Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getWorkspaces, type HealthStatus, type WorkspaceSummary } from "../../api/client";
 import type { PageKey } from "./AppShell";
-
-const navItems: Array<{ key: PageKey; label: string; icon: typeof Home }> = [
-  { key: "overview", label: "总览", icon: Home },
-  { key: "workspace", label: "工作区", icon: Boxes },
-  { key: "agents", label: "Agents", icon: Bot },
-  { key: "skills", label: "Skills", icon: Braces },
-  { key: "sessions", label: "会话", icon: MessageSquare },
-  { key: "runs", label: "运行记录", icon: ClipboardList },
-  { key: "builder", label: "Agent 开发", icon: Code2 },
-  { key: "settings", label: "设置", icon: Settings },
-];
+import { visibleNavItems } from "./nav-items";
 
 type LeftNavigationProps = {
   activePage: PageKey;
@@ -30,6 +11,27 @@ type LeftNavigationProps = {
 };
 
 export function LeftNavigation({ activePage, healthStatus, onNavigate }: LeftNavigationProps) {
+  const [workspaces, setWorkspaces] = useState<WorkspaceSummary[]>([]);
+  const [workspaceState, setWorkspaceState] = useState<"loading" | "ready" | "unavailable">("loading");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getWorkspaces(controller.signal)
+      .then((items) => {
+        setWorkspaces(items);
+        setWorkspaceState("ready");
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setWorkspaceState("unavailable");
+      });
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <aside className="left-nav">
       <div className="brand">
@@ -38,7 +40,7 @@ export function LeftNavigation({ activePage, healthStatus, onNavigate }: LeftNav
       </div>
 
       <nav className="nav-list" aria-label="主导航">
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <button
@@ -59,17 +61,17 @@ export function LeftNavigation({ activePage, healthStatus, onNavigate }: LeftNav
           <span>工作区列表</span>
           <span>+</span>
         </div>
-        {[
-          ["AgentPanels", "运行中 3", "blue"],
-          ["one-code-cli", "运行中 2", "green"],
-          ["Website", "运行中 1", "amber"],
-          ["Docs", "运行中 0", "gray"],
-        ].map(([name, meta, tone]) => (
-          <button className={`workspace-pill ${name === "one-code-cli" ? "selected" : ""}`} key={name} type="button">
-            <span className={`dot ${tone}`} />
+        {workspaceState === "loading" ? <p className="muted-note">正在加载真实工作区...</p> : null}
+        {workspaceState === "unavailable" ? <p className="muted-note">工作区后端接口尚未接入</p> : null}
+        {workspaceState === "ready" && workspaces.length === 0 ? (
+          <p className="muted-note">暂无工作区，等待后端接入</p>
+        ) : null}
+        {workspaces.map((workspace) => (
+          <button className={`workspace-pill ${workspace.active ? "selected" : ""}`} key={workspace.id} type="button">
+            <span className={workspace.active ? "dot green" : "dot gray"} />
             <span>
-              <strong>{name}</strong>
-              <small>{meta}</small>
+              <strong>{workspace.name}</strong>
+              <small>{workspace.runningCount} 个运行中</small>
             </span>
           </button>
         ))}

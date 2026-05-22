@@ -3,7 +3,7 @@ import type { HealthStatus } from "../../api/client";
 import { LeftNavigation } from "./LeftNavigation";
 import { TopCommandBar } from "./TopCommandBar";
 
-export type PageKey = "overview" | "workspace" | "agents" | "skills" | "sessions" | "runs" | "builder" | "settings";
+export type PageKey = "overview" | "workspace" | "sessions" | "runs";
 
 type AppShellProps = {
   activePage: PageKey;

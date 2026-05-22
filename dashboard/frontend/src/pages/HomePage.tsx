@@ -1,57 +1,24 @@
-import { Bot, CheckCircle2, Clock3, Filter, Plus, ShieldCheck, Sparkles, Star, Zap } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import type { HealthStatus } from "../api/client";
 
 const pipeline = [
   {
     title: "待分派",
-    count: 2,
-    items: [
-      ["实现任务优先级排序", "claude", "run_8f3a2c1b", "待分派", "spark"],
-      ["改进命令行交互体验", "gemini", "run_c2d9e7a4", "待分派", "star"],
-    ],
+    count: 0,
   },
   {
     title: "执行中",
-    count: 2,
-    items: [
-      ["重构定价模块", "codex", "run_91b7d2e9", "62%", "bot"],
-      ["更新 API 文档", "opencode", "run_2d6f8b11", "41%", "spark"],
-    ],
+    count: 0,
   },
   {
     title: "待确认",
-    count: 2,
-    items: [
-      ["完善权限模型设计", "codex", "run_7c3b2a91", "待确认", "lab"],
-      ["更新页面文档结构", "gemini", "run_d26f8b11", "待确认", "star"],
-    ],
+    count: 0,
   },
   {
     title: "已完成",
-    count: 2,
-    items: [
-      ["搭建 CI 工作流", "codex", "run_e1d4f6a2", "成功", "shield"],
-      ["修复类型错误", "claude", "run_6f0a9b7e", "成功", "spark"],
-    ],
+    count: 0,
   },
 ];
-
-const events = [
-  ["10:41:12", "[one-code-cli / codex]", "正在读取 sessions.sqlite..."],
-  ["10:41:13", "[AgentPanels / claude]", "已启动运行 run_91b7d2e9：重构定价模块"],
-  ["10:41:14", "[Website / gemini]", "正在检查文件变更..."],
-  ["10:41:15", "[Docs / claude]", "任务 run_3e7a9b5c 已进入执行队列"],
-  ["10:41:16", "[one-code-cli / codex]", "安全扫描发现潜在漏洞，等待修复"],
-  ["10:41:18", "[AgentPanels / codex]", "任务 run_7c3b2a91 执行完成，等待确认"],
-];
-
-const iconMap = {
-  bot: Bot,
-  shield: ShieldCheck,
-  spark: Zap,
-  star: Star,
-  lab: Sparkles,
-};
 
 export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
   return (
@@ -62,16 +29,6 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
             <h1>运行流水线</h1>
             <p>主 Agent 将任务拆分后，按状态推进到执行与确认。</p>
           </div>
-          <div className="header-actions">
-            <button className="ghost-button" type="button">
-              <Filter size={16} />
-              筛选
-            </button>
-            <button className="ghost-button" type="button">
-              <Clock3 size={16} />
-              排序：更新时间
-            </button>
-          </div>
         </div>
         <div className="kanban">
           {pipeline.map((column) => (
@@ -80,28 +37,7 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
                 <h2>{column.title}</h2>
                 <span>{column.count}</span>
               </div>
-              {column.items.map(([title, agent, runId, state, icon]) => {
-                const Icon = iconMap[icon as keyof typeof iconMap];
-                return (
-                  <div className="task-card" key={runId}>
-                    <div className="task-title">
-                      <Icon size={18} />
-                      <strong>{title}</strong>
-                    </div>
-                    <p>{agent}</p>
-                    <code>{runId}</code>
-                    {state.endsWith("%") ? <div className="progress"><span style={{ width: state }} /></div> : null}
-                    <div className="task-meta">
-                      <span className={state === "成功" ? "tag success" : "tag"}>{state}</span>
-                      <small>{state.endsWith("%") ? "00:08:41" : "--:--"}</small>
-                    </div>
-                  </div>
-                );
-              })}
-              <button className="add-task" type="button">
-                <Plus size={16} />
-                添加任务
-              </button>
+              <div className="empty-column">等待 M3 接入真实 occ run</div>
             </article>
           ))}
         </div>
@@ -114,14 +50,7 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
         </div>
         <section className="rail-card">
           <div className="rail-title">路由队列</div>
-          <div className="queue-tabs"><span>进行中 4</span><span>待处理 3</span><span>等待中 2</span></div>
-          {["重构定价模块", "开发会话文件存储", "修复导航栏响应式问题", "更新 API 文档"].map((item, index) => (
-            <div className="queue-row" key={item}>
-              <span>{index + 1}</span>
-              <strong>{item}</strong>
-              <small>{["codex", "claude", "gemini", "opencode"][index]}</small>
-            </div>
-          ))}
+          <p className="muted-note">M3 接入真实调度后显示队列。</p>
         </section>
         <section className="rail-card">
           <div className="rail-title">后端 / occ 健康</div>
@@ -134,26 +63,12 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
           </div>
         </section>
         <section className="rail-card">
-          <div className="rail-title">已选 Skills</div>
-          <div className="chip-list">
-            {["code-review", "using-one-code-cli", "docs-writer", "ui-prototype", "test-runner"].map((skill) => (
-              <span key={skill}>{skill}</span>
-            ))}
-          </div>
+          <div className="rail-title">分派预设</div>
+          <p className="muted-note">M2 接入真实 Agent / Skill 后显示。</p>
         </section>
         <section className="rail-card">
-          <div className="rail-title">活跃 Agents</div>
-          {["codex 2 个运行中", "claude 1 个运行中", "gemini 1 个运行中", "opencode 0 个运行中"].map((item) => (
-            <div className="queue-row compact" key={item}>
-              <span className="status-dot" />
-              <strong>{item}</strong>
-            </div>
-          ))}
-        </section>
-        <section className="rail-card quick-actions">
-          <button className="primary-button full" type="button">新建任务</button>
-          <button className="ghost-button full" type="button">打开会话</button>
-          <button className="ghost-button full" type="button">创建 Agent</button>
+          <div className="rail-title">执行器状态</div>
+          <p className="muted-note">M2 接入真实执行器后显示。</p>
         </section>
       </aside>
 
@@ -163,13 +78,7 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
           <span className="online">实时</span>
         </div>
         <div className="event-list">
-          {events.map(([time, source, detail]) => (
-            <div className="event-row" key={`${time}-${detail}`}>
-              <time>{time}</time>
-              <code>{source}</code>
-              <span>{detail}</span>
-            </div>
-          ))}
+          <p className="muted-note">M3 接入 SSE 后显示真实运行事件。</p>
         </div>
       </section>
     </div>
