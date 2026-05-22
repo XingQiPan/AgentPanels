@@ -1,4 +1,4 @@
-import type { HealthResponse } from "@agentpanels/shared";
+import type { DashboardRun, HealthResponse } from "@agentpanels/shared";
 
 export type HealthStatus =
   | { state: "loading"; label: "正在检查后端"; health: null }
@@ -12,6 +12,13 @@ export type WorkspaceSummary = {
   path: string;
   active: boolean;
   runningCount: number;
+};
+
+export type CreateRunInput = {
+  workspaceId: string;
+  agent: string;
+  title: string;
+  prompt: string;
 };
 
 export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
@@ -52,4 +59,58 @@ export async function getWorkspaces(signal?: AbortSignal): Promise<WorkspaceSumm
   }
 
   return response.json() as Promise<WorkspaceSummary[]>;
+}
+
+export async function getRuns(workspaceId?: string, signal?: AbortSignal): Promise<DashboardRun[]> {
+  const params = new URLSearchParams();
+  if (workspaceId) {
+    params.set("workspaceId", workspaceId);
+  }
+  const response = await fetch(`/api/runs${params.size > 0 ? `?${params.toString()}` : ""}`, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    signal,
+  });
+
+  if (response.status === 404) {
+    return [];
+  }
+
+  if (!response.ok) {
+    throw new Error(`Runs request failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<DashboardRun[]>;
+}
+
+export async function createRun(input: CreateRunInput, signal?: AbortSignal): Promise<DashboardRun> {
+  const response = await fetch("/api/runs", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Run create request failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<DashboardRun>;
+}
+
+export async function confirmRun(dashboardRunId: string, signal?: AbortSignal): Promise<DashboardRun> {
+  const response = await fetch(`/api/runs/${encodeURIComponent(dashboardRunId)}/confirm`, {
+    method: "POST",
+    headers: { Accept: "application/json" },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Run confirm request failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<DashboardRun>;
 }

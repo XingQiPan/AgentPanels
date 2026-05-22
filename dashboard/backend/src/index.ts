@@ -4,13 +4,16 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { getConfig, type AppConfig } from "./config.js";
 import { registerAgentRoutes } from "./routes/agents.js";
 import { registerHealthRoute } from "./routes/health.js";
+import { registerRunRoutes } from "./routes/runs.js";
 import { registerSkillRoutes } from "./routes/skills.js";
 import { registerWorkspaceRoutes } from "./routes/workspaces.js";
 import { probeOcc, type OccProbeResult } from "./services/occ-runner.js";
+import type { RunServiceOptions } from "./services/run-service.js";
 
 export type BuildServerOptions = {
   config?: Partial<AppConfig>;
   occProbe?: () => Promise<OccProbeResult>;
+  runCommand?: RunServiceOptions["runCommand"];
 };
 
 export async function buildServer(options: BuildServerOptions = {}): Promise<FastifyInstance> {
@@ -49,6 +52,11 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
 
   await registerAgentRoutes(app, occListOptions);
   await registerSkillRoutes(app, occListOptions);
+  await registerRunRoutes(app, {
+    ...occListOptions,
+    dataDir: config.dataDir,
+    runCommand: options.runCommand,
+  });
 
   return app;
 }

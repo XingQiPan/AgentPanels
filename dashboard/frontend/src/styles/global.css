@@ -453,6 +453,18 @@ h3 {
   padding: 10px;
 }
 
+.task-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.task-actions .ghost-button {
+  min-width: 0;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
 .task-title {
   display: grid;
   grid-template-columns: 20px 1fr;
@@ -605,6 +617,11 @@ code {
 }
 
 .quick-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.dispatch-form {
   display: grid;
   gap: 10px;
 }

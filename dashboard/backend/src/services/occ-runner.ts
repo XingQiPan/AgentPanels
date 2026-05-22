@@ -40,6 +40,8 @@ export type OccProbeResult = {
 export type RunOccOptions = {
   timeoutMs: number;
   env?: NodeJS.ProcessEnv;
+  cwd?: string;
+  stdin?: string;
 };
 
 const REPO_OCC_CANDIDATES = [
@@ -88,6 +90,7 @@ export function runOcc(executable: string, args: string[], options: RunOccOption
   return new Promise((resolve) => {
     const command = getOccSpawnCommand(executable, args);
     const child = spawn(command.executable, command.args, {
+      cwd: options.cwd,
       env: options.env ?? process.env,
       windowsHide: true,
       windowsVerbatimArguments: command.windowsVerbatimArguments,
@@ -131,6 +134,10 @@ export function runOcc(executable: string, args: string[], options: RunOccOption
     child.stderr?.on("data", (chunk: string) => {
       stderr += chunk;
     });
+
+    if (options.stdin !== undefined) {
+      child.stdin?.end(options.stdin);
+    }
 
     child.on("error", (error) => {
       finish({

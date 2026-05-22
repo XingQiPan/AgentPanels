@@ -14,7 +14,7 @@ export function TopCommandBar({ healthStatus }: TopCommandBarProps) {
       </div>
       <div className="command-input">
         <Terminal size={18} />
-        <input aria-label="任务输入框" disabled placeholder="M3 接入真实 occ run 后可分派任务" />
+        <input aria-label="任务输入框" disabled placeholder="在总览右侧分派真实 occ 任务" />
       </div>
       <button className="primary-button" disabled type="button">
         <Send size={17} />
