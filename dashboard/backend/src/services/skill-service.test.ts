@@ -8,4 +8,10 @@ describe("skill-service", () => {
       { name: "docs-writer", installed: false, raw: "- docs-writer missing" },
     ]);
   });
+
+  it("ignores the table header from occ skills list", () => {
+    expect(parseSkillOutput("NAME                DESCRIPTION\nusing-one-code-cli  Protocol for agents")).toEqual([
+      { name: "using-one-code-cli", installed: true, raw: "using-one-code-cli  Protocol for agents" },
+    ]);
+  });
 });

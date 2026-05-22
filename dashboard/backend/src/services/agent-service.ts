@@ -27,6 +27,7 @@ export function parseAgentOutput(output: string): LightweightAgent[] {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
+    .filter((line) => !isAgentTableHeader(line))
     .map(agentFromLine);
 }
 
@@ -66,6 +67,10 @@ function detectCli(value: string): string {
 
 function cleanLeadingMarker(value: string): string {
   return value.replace(/^[-*\s]+/, "");
+}
+
+function isAgentTableHeader(line: string): boolean {
+  return /^AGENT\s+CLI\s+MODEL\s+EFFORT\s+ENV\s+SOURCE\s+ALIASES$/i.test(line);
 }
 
 function tryParseJson(value: string): unknown {

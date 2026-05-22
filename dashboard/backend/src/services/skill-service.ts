@@ -26,6 +26,7 @@ export function parseSkillOutput(output: string): LightweightSkill[] {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
+    .filter((line) => !isSkillTableHeader(line))
     .map(skillFromLine);
 }
 
@@ -54,6 +55,10 @@ function skillFromLine(line: string): LightweightSkill {
     installed: !/(missing|not installed|未安装|不可用)/i.test(line),
     raw: line,
   };
+}
+
+function isSkillTableHeader(line: string): boolean {
+  return /^NAME\s+DESCRIPTION$/i.test(line);
 }
 
 function tryParseJson(value: string): unknown {

@@ -8,4 +8,10 @@ describe("agent-service", () => {
       { name: "claude", cli: "claude", available: false, raw: "- claude unavailable" },
     ]);
   });
+
+  it("ignores the table header from occ agents list", () => {
+    expect(parseAgentOutput("AGENT     CLI       MODEL  EFFORT  ENV  SOURCE   ALIASES\ncodex     codex     -      -       0    builtin  aliases=")).toEqual([
+      { name: "codex", cli: "codex", available: true, raw: "codex     codex     -      -       0    builtin  aliases=" },
+    ]);
+  });
 });

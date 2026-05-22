@@ -9,6 +9,7 @@ dashboard/node_modules/
 dashboard/**/node_modules/
 dashboard/**/dist/
 dashboard/.dev-logs/
+dashboard/backend/data/
 
 # Editor and OS files
 .DS_Store
