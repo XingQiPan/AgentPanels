@@ -240,11 +240,12 @@ small,
 
 .workspace-switcher {
   display: flex;
+  flex: 0 0 205px;
   gap: 8px;
   align-items: center;
-  min-width: 205px;
   border-right: 1px solid var(--line);
   padding-right: 18px;
+  white-space: nowrap;
 }
 
 .command-input {
@@ -252,7 +253,7 @@ small,
   flex: 1;
   align-items: center;
   gap: 10px;
-  min-width: 300px;
+  min-width: 220px;
   height: 40px;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -387,18 +388,21 @@ h3 {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(760px, 1fr) 340px;
+  grid-template-columns: minmax(650px, 1fr) 300px;
   grid-template-rows: auto minmax(210px, auto);
+  align-items: start;
   gap: 14px;
 }
 
 .pipeline-panel {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
 }
 
 .kanban {
   display: grid;
-  grid-template-columns: repeat(4, minmax(170px, 1fr));
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
   gap: 12px;
   padding: 8px 12px 12px;
 }
@@ -406,11 +410,11 @@ h3 {
 .kanban-column {
   display: flex;
   flex-direction: column;
-  min-height: 490px;
+  min-height: 390px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: linear-gradient(180deg, #fbfcfd, #fff);
-  padding: 12px;
+  padding: 10px;
 }
 
 .column-title span {
@@ -428,7 +432,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
-  padding: 12px;
+  padding: 10px;
 }
 
 .task-title {
@@ -438,7 +442,14 @@ h3 {
   align-items: center;
 }
 
-.task-title strong,
+.task-title strong {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.35;
+}
+
 .queue-row strong {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -499,6 +510,8 @@ code {
 }
 
 .right-rail {
+  grid-column: 2;
+  grid-row: 1 / span 2;
   display: grid;
   align-content: start;
   gap: 12px;
@@ -550,11 +563,24 @@ code {
 
 .queue-row {
   display: grid;
-  grid-template-columns: 26px 1fr 72px;
+  grid-template-columns: 22px minmax(0, 1fr) 58px;
   gap: 8px;
   align-items: center;
   min-height: 34px;
   border-top: 1px solid var(--line);
+}
+
+.queue-row.compact {
+  grid-template-columns: 18px 1fr;
+}
+
+.quick-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.ghost-button.full {
+  width: 100%;
 }
 
 .health-card {
@@ -571,6 +597,7 @@ code {
 
 .events-panel {
   grid-column: 1 / 2;
+  grid-row: 2;
 }
 
 .event-list {
@@ -974,9 +1001,9 @@ textarea {
   gap: 10px;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1120px) {
   body {
-    min-width: 1024px;
+    min-width: 980px;
   }
 
   .app-shell {

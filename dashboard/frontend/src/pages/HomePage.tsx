@@ -141,6 +141,20 @@ export function HomePage({ healthStatus }: { healthStatus: HealthStatus }) {
             ))}
           </div>
         </section>
+        <section className="rail-card">
+          <div className="rail-title">活跃 Agents</div>
+          {["codex 2 个运行中", "claude 1 个运行中", "gemini 1 个运行中", "opencode 0 个运行中"].map((item) => (
+            <div className="queue-row compact" key={item}>
+              <span className="status-dot" />
+              <strong>{item}</strong>
+            </div>
+          ))}
+        </section>
+        <section className="rail-card quick-actions">
+          <button className="primary-button full" type="button">新建任务</button>
+          <button className="ghost-button full" type="button">打开会话</button>
+          <button className="ghost-button full" type="button">创建 Agent</button>
+        </section>
       </aside>
 
       <section className="panel events-panel">
